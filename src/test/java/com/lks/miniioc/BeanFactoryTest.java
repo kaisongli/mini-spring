@@ -9,13 +9,18 @@ import org.junit.Test;
  */
 public class BeanFactoryTest {
     @Test
-    public void test(){
+    public void test() throws Exception {
         //实例化beanFactory
         BeanFactory factory = new AutowireCapableBeanFactory();
 
         //注入bean
         BeanDefinition beanDefinition = new BeanDefinition(new TestService());
         beanDefinition.setBeanClassName("com.lks.miniioc.TestService");
+        //属性注入
+        PropertyValues propertyValues = new PropertyValues();
+        propertyValues.addPropertyValues(new PropertyValue("text", "hello world"));
+        beanDefinition.setPropertyValues(propertyValues);
+        //注册bean
         factory.registerBeanDefinition("testService", beanDefinition);
 
         //bean调用
