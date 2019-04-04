@@ -1,5 +1,7 @@
 package com.lks.miniioc;
 
+import com.lks.miniioc.factory.AutowireCapableBeanFactory;
+import com.lks.miniioc.factory.BeanFactory;
 import org.junit.Test;
 
 /**
@@ -9,10 +11,11 @@ public class BeanFactoryTest {
     @Test
     public void test(){
         //实例化beanFactory
-        BeanFactory factory = new BeanFactory();
+        BeanFactory factory = new AutowireCapableBeanFactory();
 
         //注入bean
         BeanDefinition beanDefinition = new BeanDefinition(new TestService());
+        beanDefinition.setBeanClassName("com.lks.miniioc.TestService");
         factory.registerBeanDefinition("testService", beanDefinition);
 
         //bean调用
