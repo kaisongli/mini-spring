@@ -2,7 +2,7 @@ package com.lks.miniioc;
 
 import com.lks.miniioc.factory.AutowireCapableBeanFactory;
 import com.lks.miniioc.factory.BeanFactory;
-import com.lks.miniioc.io.ResourceLoader;
+import com.lks.miniioc.io.UrlResourceLoader;
 import com.lks.miniioc.xml.XmlBeanDefinitionReader;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class BeanFactoryTest {
     @Test
     public void test() throws Exception {
         //读取配置
-        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(new ResourceLoader());
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(new UrlResourceLoader());
         xmlBeanDefinitionReader.loadBeanDefinitions("miniioc.xml");
 
         //初始化beanfactory和注册bean
