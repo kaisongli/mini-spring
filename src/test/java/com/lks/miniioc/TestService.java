@@ -6,8 +6,10 @@ package com.lks.miniioc;
 public class TestService {
     private String text;
 
+    private ReferenceService referenceService;
+
     public void hello(){
-        System.out.println(text);
+        referenceService.output();
     }
 
     public void setText(String text) {
@@ -16,5 +18,9 @@ public class TestService {
 
     public String getText() {
         return text;
+    }
+
+    public void setReferenceService(ReferenceService referenceService) {
+        this.referenceService = referenceService;
     }
 }

@@ -2,6 +2,7 @@ package com.lks.miniioc.xml;
 
 import com.lks.miniioc.AbstractBeanDefinitionReader;
 import com.lks.miniioc.BeanDefinition;
+import com.lks.miniioc.BeanReference;
 import com.lks.miniioc.PropertyValue;
 import com.lks.miniioc.io.ResourceLoader;
 import org.w3c.dom.Document;
@@ -61,7 +62,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         BeanDefinition beanDefinition = new BeanDefinition();
         processProperty(ele, beanDefinition);
         beanDefinition.setBeanClassName(className);
-        getRegister().put(name, beanDefinition);
+        getRegistry().put(name, beanDefinition);
     }
 
     private void processProperty(Element ele, BeanDefinition beanDefinition) {
@@ -73,7 +74,17 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                     Element property = (Element) node;
                     String name = property.getAttribute("name");
                     String value = property.getAttribute("value");
-                    beanDefinition.getPropertyValues().addPropertyValues(new PropertyValue(name, value));
+                    if (value != null && value.length() > 0) {
+                        beanDefinition.getPropertyValues().addPropertyValues(new PropertyValue(name, value));
+                    }else {
+                        String ref = property.getAttribute("ref");
+                        if (ref == null || ref.length() == 0) {
+                            throw new IllegalArgumentException("Configuration problem: <property> element for property '"
+                                    + name + "' must specify a ref or value");
+                        }
+                        BeanReference beanReference = new BeanReference(ref);
+                        beanDefinition.getPropertyValues().addPropertyValues(new PropertyValue(name, beanReference));
+                    }
                 }
             }
         }

@@ -4,10 +4,10 @@ package com.lks.miniioc;
  * Created by likaisong on 2019/4/4.
  */
 public class PropertyValue {
-    private String name;
-    private String value;
+    private final String name;
+    private final Object value;
 
-    public PropertyValue(String name, String value) {
+    public PropertyValue(String name, Object value) {
         this.name = name;
         this.value = value;
     }
@@ -16,15 +16,7 @@ public class PropertyValue {
         return name;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }

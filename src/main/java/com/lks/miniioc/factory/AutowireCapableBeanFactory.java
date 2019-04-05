@@ -1,6 +1,7 @@
 package com.lks.miniioc.factory;
 
 import com.lks.miniioc.BeanDefinition;
+import com.lks.miniioc.BeanReference;
 import com.lks.miniioc.PropertyValue;
 
 import java.lang.reflect.Field;
@@ -13,9 +14,8 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory{
 
     @Override
     protected Object doCreateBean(BeanDefinition beanDefinition) throws Exception {
-        //获取实例化bean
         Object bean = createBeanInstance(beanDefinition);
-        //初始化bean
+        beanDefinition.setBean(bean);
         applyPropertyValues(bean, beanDefinition);
         return bean;
     }
@@ -29,7 +29,12 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory{
        for (PropertyValue propertyValue : propertyValues){
            Field beanField = bean.getClass().getDeclaredField(propertyValue.getName());
            beanField.setAccessible(true);
-           beanField.set(bean, propertyValue.getValue());
+           Object value = propertyValue.getValue();
+           if (value instanceof BeanReference){
+               BeanReference beanReference = (BeanReference) value;
+               value = getBean(beanReference.getName());
+           }
+           beanField.set(bean, value);
        }
     }
 }
