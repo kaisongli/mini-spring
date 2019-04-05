@@ -2,7 +2,11 @@ package com.lks.miniioc;
 
 import com.lks.miniioc.factory.AutowireCapableBeanFactory;
 import com.lks.miniioc.factory.BeanFactory;
+import com.lks.miniioc.io.ResourceLoader;
+import com.lks.miniioc.xml.XmlBeanDefinitionReader;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Created by likaisong on 2019/3/21.
@@ -10,18 +14,15 @@ import org.junit.Test;
 public class BeanFactoryTest {
     @Test
     public void test() throws Exception {
-        //实例化beanFactory
-        BeanFactory factory = new AutowireCapableBeanFactory();
+        //读取配置
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(new ResourceLoader());
+        xmlBeanDefinitionReader.loadBeanDefinitions("miniioc.xml");
 
-        //注入bean
-        BeanDefinition beanDefinition = new BeanDefinition(new TestService());
-        beanDefinition.setBeanClassName("com.lks.miniioc.TestService");
-        //属性注入
-        PropertyValues propertyValues = new PropertyValues();
-        propertyValues.addPropertyValues(new PropertyValue("text", "hello world"));
-        beanDefinition.setPropertyValues(propertyValues);
-        //注册bean
-        factory.registerBeanDefinition("testService", beanDefinition);
+        //初始化beanfactory和注册bean
+        BeanFactory factory = new AutowireCapableBeanFactory();
+        for (Map.Entry<String, BeanDefinition> beanDefinitionEntry : xmlBeanDefinitionReader.getRegister().entrySet()){
+            factory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
+        }
 
         //bean调用
         TestService bean = (TestService) factory.getBean("testService");
